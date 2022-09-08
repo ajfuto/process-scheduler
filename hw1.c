@@ -14,6 +14,7 @@ int main(void)
     FILE *ifp;
     ifp = fopen("./processes.in", "r");
 
+    // making sure we can open out input file
     if (ifp == NULL)
     {
         printf("error opening <processes.in> file");
@@ -21,8 +22,6 @@ int main(void)
     }
 
     char *line = malloc(1024 * sizeof(char));
-    int currChar;
-    int charIdx = 0;
 
     // read process count
     int pc = 0;
@@ -47,6 +46,7 @@ int main(void)
         printf("quantum: %d\n", quantum);
     }
 
+    // an array of our processes
     process* processes = (process*)malloc(pc * sizeof(process));
 
     // iterate through our processes
