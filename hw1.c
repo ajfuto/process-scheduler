@@ -119,6 +119,20 @@ int main(void)
     return 0;
 }
 
-void round_robin() {
+// round-robin algorithm
+void rr()
+{
+
+}
+
+// shortest job first algorithm
+void sjf()
+{
+
+}
+
+// first-come-first-serve algorithm
+void fcfs()
+{
 
 }
