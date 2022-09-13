@@ -2,11 +2,55 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct process {
+// a process
+typedef struct Process
+{
     char* name;
     int arrival;
     int burst;
-} process;
+
+    int priority;
+    struct node* next;
+} Process;
+
+// =======================
+//       queue stuff
+// =======================
+
+// node for our priority queue
+// typedef struct node
+// {
+//     struct process* proc;
+//     int priority; // lower = higher priority
+//     struct node* next;
+// } node;
+
+typedef struct queue
+{
+    struct Process* head;
+    int queue_size;
+} queue;
+
+
+void init(struct queue* qPtr)
+{
+    qPtr->head = NULL;
+}
+
+int is_empty(struct queue* qPtr)
+{
+    return (qPtr->head == NULL) ? 1 : 0;
+}
+
+void enqueue(struct queue* qPtr, Process* proc)
+{
+    
+}
+
+
+// queue functions
+
+
 
 
 int main(void)
@@ -47,7 +91,7 @@ int main(void)
     }
 
     // an array of our processes
-    process* processes = (process*)malloc(pc * sizeof(process));
+    Process* processes = (Process*)malloc(pc * sizeof(Process));
 
     // iterate through our processes
     for (int i = 0; i < pc; i++)
@@ -59,11 +103,13 @@ int main(void)
         fscanf(ifp, "%*s %*s %s %*s %d %*s %d", name, &arrival, &burst);
 
         // create a new process to append to our processes array
-        process curr_process;
+        Process curr_process;
         curr_process.name = malloc(strlen(name) * sizeof(char));
         strcpy(curr_process.name, name);
         curr_process.arrival = arrival;
         curr_process.burst = burst;
+        curr_process.next = NULL;
+        curr_process.priority = 0;
 
         // appends process to our array
         processes[i] = curr_process;
