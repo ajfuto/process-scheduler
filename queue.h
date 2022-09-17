@@ -59,6 +59,15 @@ void n_enqueue(Queue *q, Process *data)
     num_insert(q->list, data);
 }
 
+void b_enqueue(Queue *q, Process *data)
+{
+    if (q == NULL || q->list == NULL)
+        return;
+
+    q->size++;
+    tail_insert(q->list, data);
+}
+
 Process* dequeue(Queue *q)
 {
     if (isEmpty(q))

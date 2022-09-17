@@ -7,19 +7,38 @@
 
 #define MAX_LEN 512
 
-int main(void)
+int main(int argc, char **argv)
 {
-    FILE *ifp;
+    FILE *ifp, *ofp;
     srand(time(NULL));
     int num = 0;
-    ifp = fopen("./asn1-sampleio/set3_process.in", "r");
+
+    if (argc != 2)
+    {
+        printf("please run with the following syntax:\n");
+        printf("\t./a.out processes_file_name.in\n");
+        return -1;
+    }
+
+    // opens input file
+    ifp = fopen(argv[1], "r");
 
     // making sure we can open out input file
     if (ifp == NULL)
     {
-        printf("error opening <processes.in> file");
+        printf("error opening <processes.in> file\n");
         return -1;
     }
+
+    // generates output file name
+    char *output_name = malloc(MAX_LEN * sizeof(char));
+    int i = 0;
+    while (*argv[1] != '.')
+        output_name[i++] = *argv[1]++;
+    output_name = strcat(output_name, ".out");
+
+    // opens output file
+    ofp = fopen(output_name, "w");
 
     char *line = malloc(MAX_LEN * sizeof(char));
     int pc, runfor, quantum, algorithm;
@@ -109,22 +128,27 @@ int main(void)
 
     }
 
-    printf("%d processes\n", pc);
-    printf("Using %s\n\n", ALGO_STRINGS[algorithm - ALGO_START]);
+    fprintf(ofp, "%d processes\n", pc);
+    fprintf(ofp, "Using %s\n", ALGO_STRINGS[algorithm - ALGO_START]);
+    if (algorithm == ROUND_ROBIN)
+        fprintf(ofp, "Quantum %d\n", quantum);
+    fprintf(ofp, "\n");
 
     switch (algorithm)
     {
         case FIRST_COME_FIRST_SERVE:
-            fcfs(pc, runfor, q);
+            fcfs(pc, runfor, q, ofp);
             break;
         case SHORTEST_JOB_FIRST:
-            sjf(pc, runfor, q);
+            sjf(pc, runfor, q, ofp);
             break;
         case ROUND_ROBIN:
-            rr(pc, runfor, quantum, q);
+            rr(pc, runfor, quantum, q, ofp);
             break;
     }
     
+    fclose(ifp);
+    fclose(ofp);
     return 0;
 }
 
