@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     if (argc != 2)
     {
         printf("please run with the following syntax:\n");
-        printf("\t./a.out processes_file_name.in\n");
+        printf("\t%s processes_file_name.in\n", argv[0]);
         return -1;
     }
 
