@@ -41,12 +41,36 @@ Process* dequeue(Queue *q)
     return head_delete(q->list);
 }
 
+
 Process* peek(Queue *q)
 {
     if (isEmpty(q))
         return NULL;
 
     return q->list->head->data;
+}
+
+Process* decrement(Queue *q)
+{
+    if (q == NULL || q->list == NULL)
+        return NULL;
+    
+    q->list->head->data->tleft--;
+
+    // if (q->list->head->data->tleft == 0)
+    //     return dequeue(q);
+    
+    return peek(q);
+}
+
+void q_increment_turnaround(Queue *q)
+{
+    if (q == NULL || q->list == NULL)
+        return;
+
+    l_increment_turnaround(q->list);
+
+    return;    
 }
 
 #endif

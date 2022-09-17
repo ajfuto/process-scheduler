@@ -9,7 +9,9 @@ typedef struct Process
     char* name;
     int arrival;
     int burst;
+    int tleft;
     int priority;
+    int turnaround;
 } Process;
 
 Process *create_process(char* name, int arrival, int burst, int priority)
@@ -19,7 +21,9 @@ Process *create_process(char* name, int arrival, int burst, int priority)
     strcpy(p->name, name);
     p->arrival = arrival;
     p->burst = burst;
+    p->tleft = burst;
     p->priority = priority;
+    p->turnaround = 0;
 
     return p;
 

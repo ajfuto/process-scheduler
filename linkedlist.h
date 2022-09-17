@@ -143,6 +143,18 @@ int compare_nodes(const void *a, const void *b)
 	return ( (*(node**)a)->data->priority - (*(node**)b)->data->priority );
 }
 
+void l_increment_turnaround(LinkedList *l)
+{
+	node* temp = l->head;
+	while (temp != NULL)
+	{
+		temp->data->turnaround++;
+		temp = temp->next;
+	}
+	
+	return;
+}
+
 
 
 #endif
