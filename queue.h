@@ -50,9 +50,9 @@ Process* peek(Queue *q)
     return q->list->head->data;
 }
 
-Process* decrement(Queue *q)
+Process* process_q(Queue *q)
 {
-    if (q == NULL || q->list == NULL)
+    if (q == NULL || q->list == NULL || isEmpty(q))
         return NULL;
     
     q->list->head->data->tleft--;

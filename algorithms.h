@@ -26,7 +26,7 @@ void fcfs(int process_count, int runfor, Queue *processes)
     {
         q_increment_turnaround(tbp);
 
-        // looks to see if a new process has arrived
+        // check if a new process has arrived
         if (!isEmpty(processes) && peek(processes)->arrival == t)
         {
             Process* curr = dequeue(processes);
@@ -34,36 +34,24 @@ void fcfs(int process_count, int runfor, Queue *processes)
             printf("Time %d: %s arrived\n", t, curr->name);
         }
 
-        // looks at processes that are to be processed
-        if (!isEmpty(tbp))
+        // check if the last process finished
+        if (!isEmpty(tbp) && peek(tbp)->tleft == 0)
         {
-            Process* curr = peek(tbp);
-
-            // check if previous process finished
-            if (curr->tleft == 0)
-            {
-                printf("Time %d: %s finished\n", t, curr->name);
-                strcpy(prevname, curr->name);
-                Process* dq = dequeue(tbp);
-                enqueue(finished, dq);
-            }   
+            printf("Time %d: %s finished\n", t, peek(tbp)->name);
+            strcpy(prevname, peek(tbp)->name);
+            Process* dq = dequeue(tbp);
+            enqueue(finished, dq);
         }
 
-        // decrement our processes
-        if (!isEmpty(tbp))
+        // check if we have selected a new process
+        if (!isEmpty(tbp) && (strcmp(prevname, peek(tbp)->name) != 0))
         {
-            Process* curr = peek(tbp);
-            
-            // checks if a new process has been selected
-            if(strcmp(prevname, curr->name) != 0)
-            {
-                printf("Time %d: %s selected (burst %d)\n", t, curr->name, curr->burst);
-                strcpy(prevname, curr->name);
-            }
-
-            curr = decrement(tbp);
-
+            printf("Time %d: %s selected (burst %d)\n", t, peek(tbp)->name, peek(tbp)->burst);
+            strcpy(prevname, peek(tbp)->name);
         }
+
+        // finally, process our queue (decrement the first thing)
+        process_q(tbp);
     }
 
     printf("Finished at time %d\n\n", runfor);
