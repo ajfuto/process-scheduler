@@ -10,8 +10,6 @@
 int main(int argc, char **argv)
 {
     FILE *ifp, *ofp;
-    srand(time(NULL));
-    int num = 0;
 
     // checks for proper syntax
     if (argc != 2)
@@ -45,7 +43,12 @@ int main(int argc, char **argv)
     char *line = malloc(MAX_LEN * sizeof(char));
     int pc, runfor, quantum, algorithm;
     char *algo = malloc(MAX_LEN * sizeof(char));
+
+    // our queue of processes
     Queue *q = create_queue();
+
+    // current process number
+    int num = 0;
 
     // read input file
     while (fscanf(ifp, "%[^\n]\n", line) == 1)
@@ -84,6 +87,7 @@ int main(int argc, char **argv)
         if (strncmp(line, "quantum", 7) == 0)
             sscanf(line, "%*s %d%*[^\n]\n", &quantum);
 
+        // argparse processes
         if (strncmp(line, "process name", 12) == 0)
         {
             char *name = malloc(MAX_LEN * sizeof(char));
