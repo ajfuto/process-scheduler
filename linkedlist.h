@@ -126,5 +126,23 @@ void priority_insert(LinkedList *list, Process *data)
 	
 }
 
+int get_count(LinkedList *l)
+{
+	int count = 0;
+	node* curr = l->head;
+	while (curr != NULL)
+	{
+		count++;
+		curr = curr->next;
+	}
+	return count;
+}
+
+int compare_nodes(const void *a, const void *b)
+{
+	return ( (*(node**)a)->data->priority - (*(node**)b)->data->priority );
+}
+
+
 
 #endif
