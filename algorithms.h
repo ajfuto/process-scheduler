@@ -54,8 +54,10 @@ void fcfs(int process_count, int runfor, Queue *processes)
         process_q(tbp);
     }
 
+    // after our processor runs, print that we finished
     printf("Finished at time %d\n\n", runfor);
 
+    // print stats for individual processes
     while (!isEmpty(finished)) {
         Process *dq = dequeue(finished);
         printf("%s wait %d turnaround %d\n", dq->name, (dq->turnaround - dq->burst), dq->turnaround);
