@@ -13,6 +13,7 @@ int main(int argc, char **argv)
     srand(time(NULL));
     int num = 0;
 
+    // checks for proper syntax
     if (argc != 2)
     {
         printf("please run with the following syntax:\n");
@@ -40,6 +41,7 @@ int main(int argc, char **argv)
     // opens output file
     ofp = fopen(output_name, "w");
 
+    // declares some useful variables
     char *line = malloc(MAX_LEN * sizeof(char));
     int pc, runfor, quantum, algorithm;
     char *algo = malloc(MAX_LEN * sizeof(char));
@@ -56,21 +58,13 @@ int main(int argc, char **argv)
         if (*line == '#')
             continue;
 
-        // printf("%s\n", line);
-
         // argparse processcount
         if (strncmp(line, "processcount", 12) == 0)
-        {
             sscanf(line, "%*s %d%*[^\n]\n", &pc);
-            // printf("FOUND PC: %d\n", pc);
-        }
 
         // argparse runfor
         if (strncmp(line, "runfor", 6) == 0)
-        {
             sscanf(line, "%*s %d%*[^\n]\n", &runfor);
-            // printf("FOUND RUNFOR: %d\n", runfor);
-        }
 
         // argparse use algorithm
         if (strncmp(line, "use", 3) == 0)
@@ -84,56 +78,35 @@ int main(int argc, char **argv)
                 algorithm = SHORTEST_JOB_FIRST;
             else if (strcmp(algo, "rr") == 0)
                 algorithm = ROUND_ROBIN;
-            // printf("FOUND ALGO: %d %s\n", algorithm, algo);
-            
         }
 
         // argparse quantum
         if (strncmp(line, "quantum", 7) == 0)
-        {
             sscanf(line, "%*s %d%*[^\n]\n", &quantum);
-            // printf("FOUND QUANTUM: %d\n", quantum);
-        }
 
         if (strncmp(line, "process name", 12) == 0)
         {
             char *name = malloc(MAX_LEN * sizeof(char));
-            int arrival = 0, burst = 0, pri=0;
+            int arrival = 0, burst = 0;
 
             // read the necessary information
             sscanf(line, "%*s %*s %s %*s %d %*s %d", name, &arrival, &burst);
 
-            // schedule differently based on algorithm used
-            switch(algorithm)
-            {
-                case FIRST_COME_FIRST_SERVE:
-                    pri = arrival;
-                    break;
-                case SHORTEST_JOB_FIRST:
-                    pri = burst;
-                    break;
-                case ROUND_ROBIN:
-                    pri = rand() % 100 + 1;
-                    break;
-                default:
-                    pri = rand() % 100 + 1;
-                    break;
-            }
-
-            // create a new process to append to our processes array
-            Process* curr = create_process(name, arrival, burst, pri, num++);
-            // printf("NEW PROCESS: %s, arrival %d, burst %d num %d\n", curr->name, curr->arrival, curr->burst, curr->num);
+            // create a new process to append to our processes queue
+            Process* curr = create_process(name, arrival, burst, num++);
             a_enqueue(q, curr);
         }
 
     }
 
+    // prints header information
     fprintf(ofp, "%d processes\n", pc);
     fprintf(ofp, "Using %s\n", ALGO_STRINGS[algorithm - ALGO_START]);
     if (algorithm == ROUND_ROBIN)
         fprintf(ofp, "Quantum %d\n", quantum);
     fprintf(ofp, "\n");
 
+    // runs necessary algorithm
     switch (algorithm)
     {
         case FIRST_COME_FIRST_SERVE:

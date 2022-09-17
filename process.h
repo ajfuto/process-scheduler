@@ -10,12 +10,12 @@ typedef struct Process
     int arrival;
     int burst;
     int tleft;
-    int priority;
     int turnaround;
     int num;
 } Process;
 
-Process *create_process(char* name, int arrival, int burst, int priority, int num)
+// creates a process
+Process *create_process(char* name, int arrival, int burst, int num)
 {
     Process* p = (Process*) malloc(sizeof(Process));
     p->name = (char*) malloc(strlen(name) * sizeof(char));
@@ -23,7 +23,6 @@ Process *create_process(char* name, int arrival, int burst, int priority, int nu
     p->arrival = arrival;
     p->burst = burst;
     p->tleft = burst;
-    p->priority = priority;
     p->turnaround = 0;
     p->num = num;
 

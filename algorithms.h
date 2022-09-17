@@ -188,7 +188,7 @@ void rr(int process_count, int runfor, int quantum, Queue *processes, FILE* ofp)
             n_enqueue(finished, dq);
         }
 
-
+        // selects new process if necessary
         if (!isEmpty(tbp) && (slice%quantum == 0))
         {
             Process* temp = dequeue(tbp);
@@ -198,8 +198,8 @@ void rr(int process_count, int runfor, int quantum, Queue *processes, FILE* ofp)
 
         }
 
+        // increments slice
         slice++;
-
 
         // check if we have selected a new process
         if (!isEmpty(tbp) && (strcmp(prevname, peek(tbp)->name) != 0))
@@ -215,7 +215,6 @@ void rr(int process_count, int runfor, int quantum, Queue *processes, FILE* ofp)
         }
 
         // finally, process our queue (decrement the first thing)
-
         process_q(tbp);
 
     }

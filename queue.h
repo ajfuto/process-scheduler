@@ -10,6 +10,7 @@ typedef struct Queue
     int size;
 } Queue;
 
+// creates a queue
 Queue *create_queue(void)
 {
     Queue *q = malloc(sizeof(Queue));
@@ -18,11 +19,13 @@ Queue *create_queue(void)
     return q;
 }
 
+// checks if a queue is empty. returns 1 if empty, else returns 0
 int isEmpty(Queue *q)
 {
     return (q == NULL || q->size == 0);
 }
 
+// enqueues data into our queue, sorted by arrival time
 void a_enqueue(Queue *q, Process *data)
 {
     if (q == NULL || q->list == NULL)
@@ -32,15 +35,7 @@ void a_enqueue(Queue *q, Process *data)
     arrival_insert(q->list, data);
 }
 
-void p_enqueue(Queue *q, Process *data)
-{
-    if (q == NULL || q->list == NULL)
-        return;
-
-    q->size++;
-    priority_insert(q->list, data);
-}
-
+// enqueues data into our queue, sorted by time left
 void t_enqueue(Queue *q, Process *data)
 {
     if (q == NULL || q->list == NULL)
@@ -50,6 +45,7 @@ void t_enqueue(Queue *q, Process *data)
     tleft_insert(q->list, data);
 }
 
+// enqueues data into our queue, sorted by process number
 void n_enqueue(Queue *q, Process *data)
 {
     if (q == NULL || q->list == NULL)
@@ -59,6 +55,7 @@ void n_enqueue(Queue *q, Process *data)
     num_insert(q->list, data);
 }
 
+// enqueues data into our queue, put in back
 void b_enqueue(Queue *q, Process *data)
 {
     if (q == NULL || q->list == NULL)
@@ -68,6 +65,7 @@ void b_enqueue(Queue *q, Process *data)
     tail_insert(q->list, data);
 }
 
+// dequeues
 Process* dequeue(Queue *q)
 {
     if (isEmpty(q))
@@ -77,7 +75,7 @@ Process* dequeue(Queue *q)
     return head_delete(q->list);
 }
 
-
+// peeks at head of queue
 Process* peek(Queue *q)
 {
     if (isEmpty(q))
@@ -86,6 +84,7 @@ Process* peek(Queue *q)
     return q->list->head->data;
 }
 
+// processes a queue (decrements the head)
 Process* process_q(Queue *q)
 {
     if (q == NULL || q->list == NULL || isEmpty(q))
@@ -93,12 +92,10 @@ Process* process_q(Queue *q)
     
     q->list->head->data->tleft--;
 
-    // if (q->list->head->data->tleft == 0)
-    //     return dequeue(q);
-    
     return peek(q);
 }
 
+// incremenets the turnaround of all things in a queue
 void q_increment_turnaround(Queue *q)
 {
     if (q == NULL || q->list == NULL)

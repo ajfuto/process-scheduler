@@ -15,6 +15,7 @@ typedef struct LinkedList
 	node *tail;
 } LinkedList;
 
+// creates a node
 node *create_node(Process *data)
 {
 	node *n = malloc(sizeof(node));
@@ -23,11 +24,13 @@ node *create_node(Process *data)
 	return n;
 }
 
+// creates a linked list
 LinkedList *create_list(void)
 {
 	return calloc(1, sizeof(LinkedList));
 }
 
+// recursively destroys a LinkedList
 node *recursive_destroyer(node *head)
 {
 	if (head == NULL)
@@ -39,6 +42,7 @@ node *recursive_destroyer(node *head)
 	return NULL;
 }
 
+// destroys a LinkedList
 LinkedList *destroy_list(LinkedList *list)
 {
 	if (list == NULL)
@@ -50,6 +54,7 @@ LinkedList *destroy_list(LinkedList *list)
 	return NULL;
 }
 
+// inserts data at the tail of our LinkedList
 void tail_insert(LinkedList *list, Process *data)
 {
 	if (list == NULL)
@@ -65,6 +70,7 @@ void tail_insert(LinkedList *list, Process *data)
 	list->tail = list->tail->next;
 }
 
+// deletes the head of our LinkedList
 Process* head_delete(LinkedList *list)
 {
 	Process* retval;
@@ -87,45 +93,7 @@ Process* head_delete(LinkedList *list)
 	return retval;
 }
 
-
-void priority_insert(LinkedList *list, Process *data)
-{
-	node* ins = create_node(data);
-	ins->next = NULL;
-
-	if (list == NULL)
-		return;
-
-	if (list->tail == NULL)
-	{
-		list->head = list->tail = ins;
-		return;
-	}
-
-	if (ins->data->priority < list->head->data->priority)
-	{
-		ins->next = list->head;
-		list->head = ins;
-		return;
-	}
-
-	if (ins->data->priority > list->tail->data->priority)
-	{
-		list->tail->next = ins;
-		list->tail = ins;
-		return;
-	}
-
-	node* temp = list->head;
-	while (temp->next != NULL && temp->next->data->priority < ins->data->priority)
-		temp = temp->next;
-
-	ins->next = temp->next;
-	temp->next = ins;
-
-	
-}
-
+// inserts data into our LinkedList, sorted by arrival time
 void arrival_insert(LinkedList *list, Process *data)
 {
 	node* ins = create_node(data);
@@ -162,6 +130,7 @@ void arrival_insert(LinkedList *list, Process *data)
 	temp->next = ins;
 }
 
+// inserts data into our LinkedList, sorted by time left
 void tleft_insert(LinkedList *list, Process *data)
 {
 	node* ins = create_node(data);
@@ -200,6 +169,7 @@ void tleft_insert(LinkedList *list, Process *data)
 	
 }
 
+// inserts data into our LinkedList, sorted by process number
 void num_insert(LinkedList *list, Process *data)
 {
 	node* ins = create_node(data);
@@ -238,6 +208,7 @@ void num_insert(LinkedList *list, Process *data)
 	
 }
 
+// gets count of items in our LinkedList
 int get_count(LinkedList *l)
 {
 	int count = 0;
@@ -250,11 +221,7 @@ int get_count(LinkedList *l)
 	return count;
 }
 
-int compare_nodes(const void *a, const void *b)
-{
-	return ( (*(node**)a)->data->priority - (*(node**)b)->data->priority );
-}
-
+// increments the turnaround of all processes in our LinkedList
 void l_increment_turnaround(LinkedList *l)
 {
 	node* temp = l->head;
