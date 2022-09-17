@@ -11,7 +11,8 @@ int main(void)
 {
     FILE *ifp;
     srand(time(NULL));
-    ifp = fopen("./asn1-sampleio/set1_process.in", "r");
+    int num = 0;
+    ifp = fopen("./asn1-sampleio/set3_process.in", "r");
 
     // making sure we can open out input file
     if (ifp == NULL)
@@ -75,8 +76,8 @@ int main(void)
             // printf("FOUND QUANTUM: %d\n", quantum);
         }
 
-         if (strncmp(line, "process name", 12) == 0)
-         {
+        if (strncmp(line, "process name", 12) == 0)
+        {
             char *name = malloc(MAX_LEN * sizeof(char));
             int arrival = 0, burst = 0, pri=0;
 
@@ -101,10 +102,10 @@ int main(void)
             }
 
             // create a new process to append to our processes array
-            Process* curr = create_process(name, arrival, burst, pri);
-            // printf("NEW PROCESS: %s, arrival %d, burst %d\n", curr->name, curr->arrival, curr->burst);
-            enqueue(q, curr);
-         }
+            Process* curr = create_process(name, arrival, burst, pri, num++);
+            // printf("NEW PROCESS: %s, arrival %d, burst %d num %d\n", curr->name, curr->arrival, curr->burst, curr->num);
+            a_enqueue(q, curr);
+        }
 
     }
 

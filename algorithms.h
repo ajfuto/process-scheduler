@@ -30,7 +30,7 @@ void fcfs(int process_count, int runfor, Queue *processes)
         if (!isEmpty(processes) && peek(processes)->arrival == t)
         {
             Process* curr = dequeue(processes);
-            enqueue(tbp, curr);
+            a_enqueue(tbp, curr);
             printf("Time %d: %s arrived\n", t, curr->name);
         }
 
@@ -40,14 +40,20 @@ void fcfs(int process_count, int runfor, Queue *processes)
             printf("Time %d: %s finished\n", t, peek(tbp)->name);
             strcpy(prevname, peek(tbp)->name);
             Process* dq = dequeue(tbp);
-            enqueue(finished, dq);
+            a_enqueue(finished, dq);
         }
 
         // check if we have selected a new process
         if (!isEmpty(tbp) && (strcmp(prevname, peek(tbp)->name) != 0))
         {
-            printf("Time %d: %s selected (burst %d)\n", t, peek(tbp)->name, peek(tbp)->burst);
+            printf("Time %d: %s selected (burst %d)\n", t, peek(tbp)->name, peek(tbp)->tleft);
             strcpy(prevname, peek(tbp)->name);
+        }
+
+        // handle idle
+        if (isEmpty(tbp) && (t!=runfor))
+        {
+            printf("Time %d: idle\n", t);
         }
 
         // finally, process our queue (decrement the first thing)
@@ -64,10 +70,61 @@ void fcfs(int process_count, int runfor, Queue *processes)
     }
 }
 
-// shortest job first algorithm
+// preemptive shortest job first algorithm (aka stcf)
 void sjf(int process_count, int runfor, Queue *processes)
 {
+    Queue *tbp = create_queue();
+    Queue *finished = create_queue();
+    int t;
+    char prevname[512];
 
+    // loops through time properly
+    for (t = 0; t < runfor+1; t++)
+    {
+        q_increment_turnaround(tbp);
+
+        // check if a new process has arrived
+        if (!isEmpty(processes) && peek(processes)->arrival == t)
+        {
+            Process* curr = dequeue(processes);
+            t_enqueue(tbp, curr);
+            printf("Time %d: %s arrived\n", t, curr->name);
+        }
+
+        // check if the last process finished
+        if (!isEmpty(tbp) && peek(tbp)->tleft == 0)
+        {
+            printf("Time %d: %s finished\n", t, peek(tbp)->name);
+            strcpy(prevname, peek(tbp)->name);
+            Process* dq = dequeue(tbp);
+            n_enqueue(finished, dq);
+        }
+
+        // check if we have selected a new process
+        if (!isEmpty(tbp) && (strcmp(prevname, peek(tbp)->name) != 0))
+        {
+            printf("Time %d: %s selected (burst %d)\n", t, peek(tbp)->name, peek(tbp)->tleft);
+            strcpy(prevname, peek(tbp)->name);
+        }
+
+        // handle idle
+        if (isEmpty(tbp) && (t!=runfor))
+        {
+            printf("Time %d: idle\n", t);
+        }
+
+        // finally, process our queue (decrement the first thing)
+        process_q(tbp);
+    }
+
+    // after our processor runs, print that we finished
+    printf("Finished at time %d\n\n", runfor);
+
+    // print stats for individual processes
+    while (!isEmpty(finished)) {
+        Process *dq = dequeue(finished);
+        printf("%s wait %d turnaround %d\n", dq->name, (dq->turnaround - dq->burst), dq->turnaround);
+    }
 }
 
 // round-robin algorithm

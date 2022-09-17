@@ -126,6 +126,118 @@ void priority_insert(LinkedList *list, Process *data)
 	
 }
 
+void arrival_insert(LinkedList *list, Process *data)
+{
+	node* ins = create_node(data);
+	ins->next = NULL;
+
+	if (list == NULL)
+		return;
+
+	if (list->tail == NULL)
+	{
+		list->head = list->tail = ins;
+		return;
+	}
+
+	if (ins->data->arrival < list->head->data->arrival)
+	{
+		ins->next = list->head;
+		list->head = ins;
+		return;
+	}
+
+	if (ins->data->arrival > list->tail->data->arrival)
+	{
+		list->tail->next = ins;
+		list->tail = ins;
+		return;
+	}
+
+	node* temp = list->head;
+	while (temp->next != NULL && temp->next->data->arrival < ins->data->arrival)
+		temp = temp->next;
+
+	ins->next = temp->next;
+	temp->next = ins;
+}
+
+void tleft_insert(LinkedList *list, Process *data)
+{
+	node* ins = create_node(data);
+	ins->next = NULL;
+
+	if (list == NULL)
+		return;
+
+	if (list->tail == NULL)
+	{
+		list->head = list->tail = ins;
+		return;
+	}
+
+	if (ins->data->tleft < list->head->data->tleft)
+	{
+		ins->next = list->head;
+		list->head = ins;
+		return;
+	}
+
+	if (ins->data->tleft > list->tail->data->tleft)
+	{
+		list->tail->next = ins;
+		list->tail = ins;
+		return;
+	}
+
+	node* temp = list->head;
+	while (temp->next != NULL && temp->next->data->tleft < ins->data->tleft)
+		temp = temp->next;
+
+	ins->next = temp->next;
+	temp->next = ins;
+
+	
+}
+
+void num_insert(LinkedList *list, Process *data)
+{
+	node* ins = create_node(data);
+	ins->next = NULL;
+
+	if (list == NULL)
+		return;
+
+	if (list->tail == NULL)
+	{
+		list->head = list->tail = ins;
+		return;
+	}
+
+	if (ins->data->num < list->head->data->num)
+	{
+		ins->next = list->head;
+		list->head = ins;
+		return;
+	}
+
+	if (ins->data->num > list->tail->data->num)
+	{
+		list->tail->next = ins;
+		list->tail = ins;
+		return;
+	}
+
+	node* temp = list->head;
+	while (temp->next != NULL && temp->next->data->num < ins->data->num)
+		temp = temp->next;
+
+	ins->next = temp->next;
+	temp->next = ins;
+
+	
+}
+
 int get_count(LinkedList *l)
 {
 	int count = 0;

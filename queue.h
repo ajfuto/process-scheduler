@@ -23,13 +23,40 @@ int isEmpty(Queue *q)
     return (q == NULL || q->size == 0);
 }
 
-void enqueue(Queue *q, Process *data)
+void a_enqueue(Queue *q, Process *data)
+{
+    if (q == NULL || q->list == NULL)
+        return;
+
+    q->size++;
+    arrival_insert(q->list, data);
+}
+
+void p_enqueue(Queue *q, Process *data)
 {
     if (q == NULL || q->list == NULL)
         return;
 
     q->size++;
     priority_insert(q->list, data);
+}
+
+void t_enqueue(Queue *q, Process *data)
+{
+    if (q == NULL || q->list == NULL)
+        return;
+
+    q->size++;
+    tleft_insert(q->list, data);
+}
+
+void n_enqueue(Queue *q, Process *data)
+{
+    if (q == NULL || q->list == NULL)
+        return;
+
+    q->size++;
+    num_insert(q->list, data);
 }
 
 Process* dequeue(Queue *q)
