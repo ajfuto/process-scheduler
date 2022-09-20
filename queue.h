@@ -22,7 +22,7 @@ Queue *create_queue(void)
 // checks if a queue is empty. returns 1 if empty, else returns 0
 int isEmpty(Queue *q)
 {
-    return (q == NULL || q->size == 0);
+    return (q == NULL || q->size == 0 || q->list == NULL || q->list->head == NULL);
 }
 
 // enqueues data into our queue, sorted by arrival time
@@ -104,6 +104,18 @@ void q_increment_turnaround(Queue *q)
     l_increment_turnaround(q->list);
 
     return;    
+}
+
+void print_q(Queue *q)
+{
+    printf("list: ");
+    node* t = q->list->head;
+    while (t != NULL)
+    {
+        printf("%s -> ", t->data->name);
+        t = t->next;
+    }
+    printf("\n");
 }
 
 #endif
