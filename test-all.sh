@@ -1,18 +1,33 @@
-input_files=("set1_process" "set2_process" "set3_process" "set4_process");
+num_files=18
 
-rm hw1.out;
+# removes any remnants of old tests
+rm -f hw1.out;
 gcc hw1.c -o hw1.out;
 
-for i in "${input_files[@]}"
+# iterates through our test files
+for i in $(eval echo {1..$num_files})
 do
     echo "[Test Case] Checking $i";
-    ./hw1.out asn1-sampleio/${i}.in;
-    diff -i asn1-sampleio/${i}.out asn1-sampleio/${i}es.out > /dev/null
-    diff_val=$?
-    if [[ $diff_val != 0 ]]; then
-        echo "fail (output does not match)"
-    else
-        echo "PASS!"
+
+    # generates filenames
+    infile=asn1-sampleio/set${i}_process.in
+    outfile=asn1-sampleio/set${i}_process.out
+    expected_out=asn1-sampleio/set${i}_processes.out
+
+    # executes the program given infile and generates the outfile
+    ./hw1.out $infile;
+
+    # if we have an expected output file, diff with it
+    if test -f $expected_out; then
+        diff -i $outfile $expected_out > /dev/null
+        diff_val=$?
+        if [[ $diff_val != 0 ]]; then
+            echo "fail (output does not match)"
+        else
+            echo "PASS!"
+        fi
     fi
-    rm asn1-sampleio/${i}.out;
+
+    # removes remnants
+    rm -f $outfile;
 done

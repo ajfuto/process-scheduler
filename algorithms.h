@@ -160,22 +160,23 @@ void sjf(int process_count, int runfor, Queue *processes, FILE* ofp)
 // round-robin algorithm
 void rr(int process_count, int runfor, int quantum, Queue *processes, FILE* ofp)
 {
-    Queue *tbp = create_queue();
-    Queue *finished = create_queue();
-    int t;
+    Queue *tbp = create_queue(); // to be processed
+    Queue *finished = create_queue(); // processes that have finished
+    int t; // current time
     int slice = 0;
     char prevname[512];
 
     // loops through time properly
     for (t = 0; t < runfor+1; t++)
     {
+        int p_finished = 0; // has a process finished this round?
         q_increment_turnaround(tbp);
 
         // check if a new process has arrived
         if (!isEmpty(processes) && peek(processes)->arrival == t)
         {
             Process* curr = dequeue(processes);
-            a_enqueue(tbp, curr);
+            b_enqueue(tbp, curr);
             fprintf(ofp, "Time %d: %s arrived\n", t, curr->name);
         }
 
@@ -186,15 +187,26 @@ void rr(int process_count, int runfor, int quantum, Queue *processes, FILE* ofp)
             strcpy(prevname, peek(tbp)->name);
             Process* dq = dequeue(tbp);
             n_enqueue(finished, dq);
+            
+            // reset the slice counter
+            slice = 0;
+
+            // mark that something finished this round
+            p_finished = 1;
         }
 
         // selects new process if necessary
         if (!isEmpty(tbp) && (slice%quantum == 0))
-        {
-            Process* temp = dequeue(tbp);
-            b_enqueue(tbp, temp);
+        {            
+            // only dequeue a process if we haven't finished one
+            if (!p_finished)
+            {
+                Process* temp = dequeue(tbp);
+                b_enqueue(tbp, temp);
+            }
             fprintf(ofp, "Time %d: %s selected (burst %d)\n", t, peek(tbp)->name, peek(tbp)->tleft);
             strcpy(prevname, peek(tbp)->name);
+            slice = 0;
 
         }
 
@@ -202,11 +214,11 @@ void rr(int process_count, int runfor, int quantum, Queue *processes, FILE* ofp)
         slice++;
 
         // check if we have selected a new process
-        if (!isEmpty(tbp) && (strcmp(prevname, peek(tbp)->name) != 0))
-        {
-            fprintf(ofp, "Time %d: %s selected (burst %d)\n", t, peek(tbp)->name, peek(tbp)->tleft);
-            strcpy(prevname, peek(tbp)->name);
-        }
+        // if (!isEmpty(tbp) && (strcmp(prevname, peek(tbp)->name) != 0))
+        // {
+        //     fprintf(ofp, "Time %d: %s selected (burst %d)\n", t, peek(tbp)->name, peek(tbp)->tleft);
+        //     strcpy(prevname, peek(tbp)->name);
+        // }
 
         // handle idle
         if (isEmpty(tbp) && (t!=runfor))

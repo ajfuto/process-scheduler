@@ -10,5 +10,8 @@ gcc hw1.c
 
 ### Running
 ```console
-./a.out processes_file_name.in
+./a.out process.in
 ```
+
+### Output
+this will generate a file named `processes.out`
